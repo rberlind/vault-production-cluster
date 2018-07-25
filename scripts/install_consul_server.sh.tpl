@@ -41,6 +41,7 @@ ExecReload=/bin/kill -HUP $MAINPID
 KillSignal=SIGTERM
 User=root
 Group=root
+LimitNOFILE=8192
 
 [Install]
 WantedBy=multi-user.target

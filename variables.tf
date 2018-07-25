@@ -11,7 +11,6 @@ variable "vault_download_url" {
 variable "consul_download_url" {
     default = "https://s3-us-west-2.amazonaws.com/hc-enterprise-binaries/consul/ent/1.2.1/consul-enterprise_1.2.1%2Bent_linux_amd64.zip"
     description = "URL to download Consul"
-
 }
 
 variable "vault_config" {
@@ -40,10 +39,14 @@ variable "consul_server_config" {
   "bind_addr": "0.0.0.0",
   "client_addr": "0.0.0.0",
   "advertise_addr": "IP_ADDRESS",
-  "bootstrap_expect": 3,
+  "bootstrap_expect": 5,
   "retry_join": ["provider=aws tag_key=ConsulAutoJoin tag_value=TAG_VALUE region=us-east-1"],
+  "enable_syslog": true,
   "service": {
     "name": "consul"
+  },
+  "performance": {
+    "raft_multiplier": 1
   }
 }
 EOF
@@ -58,7 +61,14 @@ variable "consul_client_config" {
   "data_dir": "/opt/consul/data",
   "bind_addr": "IP_ADDRESS",
   "client_addr": "127.0.0.1",
-  "retry_join": ["provider=aws tag_key=ConsulAutoJoin tag_value=TAG_VALUE region=us-east-1"]
+  "retry_join": ["provider=aws tag_key=ConsulAutoJoin tag_value=TAG_VALUE region=us-east-1"],
+  "enable_syslog": true,
+  "service": {
+    "name": "consul-client"
+  },
+  "performance": {
+    "raft_multiplier": 1
+  }
 }
 EOF
 }

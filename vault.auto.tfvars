@@ -13,7 +13,7 @@ vault_download_url = "https://s3-us-west-2.amazonaws.com/hc-enterprise-binaries/
 # This downloads Consul Enterprise by default
 consul_download_url = "https://s3-us-west-2.amazonaws.com/hc-enterprise-binaries/consul/ent/1.2.1/consul-enterprise_1.2.1%2Bent_linux_amd64.zip"
 
-instance_type = "m5.xlarge"
+instance_type = "m5.2xlarge"
 
 owner = "roger@hashicorp.com"
 ttl = "-1"
