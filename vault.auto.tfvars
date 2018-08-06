@@ -8,10 +8,10 @@ elb_internal = false
 public_ip = true
 
 # This downloads Vault Enterprise by default
-vault_download_url = "https://s3-us-west-2.amazonaws.com/hc-enterprise-binaries/vault/ent/0.10.3/vault-enterprise_0.10.3%2Bent_linux_amd64.zip"
+vault_download_url = "https://releases.hashicorp.com/vault/0.10.4/vault_0.10.4_linux_amd64.zip"
 
 # This downloads Consul Enterprise by default
-consul_download_url = "https://s3-us-west-2.amazonaws.com/hc-enterprise-binaries/consul/ent/1.2.1/consul-enterprise_1.2.1%2Bent_linux_amd64.zip"
+consul_download_url = "https://releases.hashicorp.com/consul/1.2.2/consul_1.2.2_linux_amd64.zip"
 
 instance_type = "m5.2xlarge"
 
