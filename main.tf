@@ -130,7 +130,7 @@ resource "aws_launch_configuration" "consul" {
     image_id = "${var.ami}"
     instance_type = "${var.instance_type}"
     key_name = "${var.key_name}"
-    security_groups = ["${aws_security_group.consul.id}"]
+    security_groups = ["${aws_security_group.vault.id}"]
     user_data = "${data.template_file.install_consul.rendered}"
     associate_public_ip_address = "${var.public_ip}"
     iam_instance_profile = "${aws_iam_instance_profile.instance_profile.name}"
@@ -199,128 +199,12 @@ resource "aws_security_group" "vault" {
     vpc_id = "${var.vpc_id}"
 }
 
-// Security group for Consul
-resource "aws_security_group" "consul" {
-    name = "${var.consul_name_prefix}-sg"
-    description = "Consul servers"
-    vpc_id = "${var.vpc_id}"
-}
-
 resource "aws_security_group_rule" "vault_ssh" {
     security_group_id = "${aws_security_group.vault.id}"
     type = "ingress"
     from_port = 22
     to_port = 22
     protocol = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
-}
-
-resource "aws_security_group_rule" "consul_ssh" {
-    security_group_id = "${aws_security_group.consul.id}"
-    type = "ingress"
-    from_port = 22
-    to_port = 22
-    protocol = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
-}
-
-// This rule allows Vault HTTP API access to individual nodes, since each will
-// need to be addressed individually for unsealing.
-resource "aws_security_group_rule" "vault_http_api" {
-    security_group_id = "${aws_security_group.vault.id}"
-    type = "ingress"
-    from_port = 8200
-    to_port = 8200
-    protocol = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
-}
-
-resource "aws_security_group_rule" "vault_cluster" {
-    security_group_id = "${aws_security_group.vault.id}"
-    type = "ingress"
-    from_port = 8201
-    to_port = 8201
-    protocol = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
-}
-
-// This rule allows Consul HTTP API access to individual nodes.
-resource "aws_security_group_rule" "consul_http_api" {
-    security_group_id = "${aws_security_group.consul.id}"
-    type = "ingress"
-    from_port = 8500
-    to_port = 8500
-    protocol = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
-}
-
-// This rule allows Consul RPC.
-resource "aws_security_group_rule" "consul_rpc" {
-    security_group_id = "${aws_security_group.consul.id}"
-    type = "ingress"
-    from_port = 8300
-    to_port = 8300
-    protocol = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
-}
-
-// This rule allows Consul Serf TCP.
-resource "aws_security_group_rule" "vault_consul_serf_tcp" {
-    security_group_id = "${aws_security_group.vault.id}"
-    type = "ingress"
-    from_port = 8301
-    to_port = 8301
-    protocol = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
-}
-
-// This rule allows Consul Serf TCP.
-resource "aws_security_group_rule" "consul_serf_tcp" {
-    security_group_id = "${aws_security_group.consul.id}"
-    type = "ingress"
-    from_port = 8301
-    to_port = 8302
-    protocol = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
-}
-
-// This rule allows Consul Serf UDP.
-resource "aws_security_group_rule" "vault_consul_serf_udp" {
-    security_group_id = "${aws_security_group.vault.id}"
-    type = "ingress"
-    from_port = 8301
-    to_port = 8301
-    protocol = "udp"
-    cidr_blocks = ["0.0.0.0/0"]
-}
-
-// This rule allows Consul Serf UDP.
-resource "aws_security_group_rule" "consul_serf_udp" {
-    security_group_id = "${aws_security_group.consul.id}"
-    type = "ingress"
-    from_port = 8301
-    to_port = 8302
-    protocol = "udp"
-    cidr_blocks = ["0.0.0.0/0"]
-}
-
-// This rule allows Consul DNS.
-resource "aws_security_group_rule" "consul_dns_tcp" {
-    security_group_id = "${aws_security_group.consul.id}"
-    type = "ingress"
-    from_port = 8600
-    to_port = 8600
-    protocol = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
-}
-
-// This rule allows Consul DNS.
-resource "aws_security_group_rule" "consul_dns_udp" {
-    security_group_id = "${aws_security_group.consul.id}"
-    type = "ingress"
-    from_port = 8600
-    to_port = 8600
-    protocol = "udp"
     cidr_blocks = ["0.0.0.0/0"]
 }
 
@@ -333,13 +217,81 @@ resource "aws_security_group_rule" "vault_egress" {
     cidr_blocks = ["0.0.0.0/0"]
 }
 
-resource "aws_security_group_rule" "consul_egress" {
-    security_group_id = "${aws_security_group.consul.id}"
-    type = "egress"
-    from_port = 0
-    to_port = 0
-    protocol = "-1"
-    cidr_blocks = ["0.0.0.0/0"]
+resource "aws_security_group_rule" "vault_elb_access" {
+    security_group_id = "${aws_security_group.vault.id}"
+    type = "ingress"
+    from_port = 8200
+    to_port = 8200
+    protocol = "tcp"
+    source_security_group_id = "${aws_security_group.vault_elb.id}"
+}
+
+resource "aws_security_group_rule" "consul_elb_access" {
+    security_group_id = "${aws_security_group.vault.id}"
+    type = "ingress"
+    from_port = 8500
+    to_port = 8500
+    protocol = "tcp"
+    source_security_group_id = "${aws_security_group.vault_elb.id}"
+}
+
+resource "aws_security_group_rule" "vault_cluster" {
+    security_group_id = "${aws_security_group.vault.id}"
+    type = "ingress"
+    from_port = 8201
+    to_port = 8201
+    protocol = "tcp"
+    source_security_group_id = "${aws_security_group.vault.id}"
+}
+
+// This rule allows Consul RPC.
+resource "aws_security_group_rule" "consul_rpc" {
+    security_group_id = "${aws_security_group.vault.id}"
+    type = "ingress"
+    from_port = 8300
+    to_port = 8300
+    protocol = "tcp"
+    source_security_group_id = "${aws_security_group.vault.id}"
+}
+
+// This rule allows Consul Serf TCP.
+resource "aws_security_group_rule" "vault_consul_serf_tcp" {
+    security_group_id = "${aws_security_group.vault.id}"
+    type = "ingress"
+    from_port = 8301
+    to_port = 8302
+    protocol = "tcp"
+    source_security_group_id = "${aws_security_group.vault.id}"
+}
+
+// This rule allows Consul Serf UDP.
+resource "aws_security_group_rule" "vault_consul_serf_udp" {
+    security_group_id = "${aws_security_group.vault.id}"
+    type = "ingress"
+    from_port = 8301
+    to_port = 8302
+    protocol = "udp"
+    source_security_group_id = "${aws_security_group.vault.id}"
+}
+
+// This rule allows Consul DNS.
+resource "aws_security_group_rule" "consul_dns_tcp" {
+    security_group_id = "${aws_security_group.vault.id}"
+    type = "ingress"
+    from_port = 8600
+    to_port = 8600
+    protocol = "tcp"
+    source_security_group_id = "${aws_security_group.vault.id}"
+}
+
+// This rule allows Consul DNS.
+resource "aws_security_group_rule" "consul_dns_udp" {
+    security_group_id = "${aws_security_group.vault.id}"
+    type = "ingress"
+    from_port = 8600
+    to_port = 8600
+    protocol = "udp"
+    source_security_group_id = "${aws_security_group.vault.id}"
 }
 
 // Launch the ELB that is serving Vault. This has proper health checks
@@ -376,7 +328,7 @@ resource "aws_elb" "consul" {
     connection_draining_timeout = 400
     internal = "${var.elb_internal}"
     subnets = ["${split(",", var.subnets)}"]
-    security_groups = ["${aws_security_group.consul_elb.id}"]
+    security_groups = ["${aws_security_group.vault_elb.id}"]
 
     listener {
         instance_port = 8500
@@ -394,7 +346,6 @@ resource "aws_elb" "consul" {
     }
 }
 
-
 resource "aws_security_group" "vault_elb" {
     name = "${var.vault_name_prefix}-elb"
     description = "Vault ELB"
@@ -410,14 +361,8 @@ resource "aws_security_group_rule" "vault_elb_http" {
     cidr_blocks = ["0.0.0.0/0"]
 }
 
-resource "aws_security_group" "consul_elb" {
-    name = "${var.consul_name_prefix}-elb"
-    description = "Consul ELB"
-    vpc_id = "${var.vpc_id}"
-}
-
 resource "aws_security_group_rule" "consul_elb_http" {
-    security_group_id = "${aws_security_group.consul_elb.id}"
+    security_group_id = "${aws_security_group.vault_elb.id}"
     type = "ingress"
     from_port = 8500
     to_port = 8500
@@ -425,20 +370,11 @@ resource "aws_security_group_rule" "consul_elb_http" {
     cidr_blocks = ["0.0.0.0/0"]
 }
 
-resource "aws_security_group_rule" "vault_elb_egress" {
+/*resource "aws_security_group_rule" "vault_elb_egress" {
     security_group_id = "${aws_security_group.vault_elb.id}"
     type = "egress"
     from_port = 0
     to_port = 0
     protocol = "-1"
     cidr_blocks = ["0.0.0.0/0"]
-}
-
-resource "aws_security_group_rule" "consul_elb_egress" {
-    security_group_id = "${aws_security_group.consul_elb.id}"
-    type = "egress"
-    from_port = 0
-    to_port = 0
-    protocol = "-1"
-    cidr_blocks = ["0.0.0.0/0"]
-}
+}*/
