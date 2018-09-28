@@ -19,6 +19,7 @@ data "template_file" "install_consul" {
         consul_download_url  = "${var.consul_download_url}"
         consul_config        = "${var.consul_server_config}"
         tag_value            = "${var.auto_join_tag}"
+        consul_nodes         = "${var.consul_nodes}"
     }
 }
 
@@ -211,8 +212,8 @@ resource "aws_security_group_rule" "vault_ssh" {
 resource "aws_security_group_rule" "vault_egress" {
     security_group_id = "${aws_security_group.vault.id}"
     type = "egress"
-    from_port = 0
-    to_port = 0
+    from_port = 80
+    to_port = 80
     protocol = "-1"
     cidr_blocks = ["0.0.0.0/0"]
 }
@@ -373,8 +374,8 @@ resource "aws_security_group_rule" "consul_elb_http" {
 /*resource "aws_security_group_rule" "vault_elb_egress" {
     security_group_id = "${aws_security_group.vault_elb.id}"
     type = "egress"
-    from_port = 0
-    to_port = 0
+    from_port = 80
+    to_port = 80
     protocol = "-1"
     cidr_blocks = ["0.0.0.0/0"]
 }*/

@@ -9,13 +9,13 @@ variable "unzip_command" {
 }
 
 variable "vault_download_url" {
-    default = "https://s3-us-west-2.amazonaws.com/hc-enterprise-binaries/vault/ent/0.10.4/vault-enterprise_0.10.4%2Bent_linux_amd64.zip"
+    default = "https://s3-us-west-2.amazonaws.com/hc-enterprise-binaries/vault/ent/0.11.1/vault-enterprise_0.11.1%2Bent_linux_amd64.zip"
     description = "URL to download Vault"
 
 }
 
 variable "consul_download_url" {
-    default = "https://s3-us-west-2.amazonaws.com/hc-enterprise-binaries/consul/ent/1.2.2/consul-enterprise_1.2.2%2Bent_linux_amd64.zip"
+    default = "https://s3-us-west-2.amazonaws.com/hc-enterprise-binaries/consul/ent/1.2.3/consul-enterprise_1.2.3%2Bent_linux_amd64.zip"
     description = "URL to download Consul"
 }
 
@@ -45,7 +45,7 @@ variable "consul_server_config" {
   "bind_addr": "0.0.0.0",
   "client_addr": "0.0.0.0",
   "advertise_addr": "IP_ADDRESS",
-  "bootstrap_expect": 5,
+  "bootstrap_expect": CONSUL_NODES,
   "retry_join": ["provider=aws tag_key=ConsulAutoJoin tag_value=TAG_VALUE region=us-east-1"],
   "enable_syslog": true,
   "service": {

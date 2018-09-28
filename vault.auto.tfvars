@@ -15,7 +15,7 @@ consul_nodes = "3"
 vault_download_url = "https://releases.hashicorp.com/vault/0.11.1/vault_0.11.1_linux_amd64.zip"
 
 # This downloads Consul Enterprise by default
-consul_download_url = "https://releases.hashicorp.com/consul/1.2.3/consul_1.2.3_linux_amd64.zip"
+  consul_download_url = "https://releases.hashicorp.com/consul/1.2.3/consul_1.2.3_linux_amd64.zip"
 
 # Ubuntu would be ami-759bc50a or ami-059eeca93cf09eebd
 ami = "ami-6871a115" # RHEL 7.5
