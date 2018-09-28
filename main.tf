@@ -214,7 +214,7 @@ resource "aws_security_group_rule" "vault_egress" {
     type = "egress"
     from_port = 80
     to_port = 80
-    protocol = "-1"
+    protocol = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
 }
 
@@ -371,11 +371,20 @@ resource "aws_security_group_rule" "consul_elb_http" {
     cidr_blocks = ["0.0.0.0/0"]
 }
 
-/*resource "aws_security_group_rule" "vault_elb_egress" {
+resource "aws_security_group_rule" "vault_elb_egress_to_vault" {
     security_group_id = "${aws_security_group.vault_elb.id}"
     type = "egress"
-    from_port = 80
-    to_port = 80
-    protocol = "-1"
-    cidr_blocks = ["0.0.0.0/0"]
-}*/
+    from_port = 8200
+    to_port = 8200
+    protocol = "tcp"
+    source_security_group_id = "${aws_security_group.vault.id}"
+}
+
+resource "aws_security_group_rule" "vault_elb_egress_to_consul" {
+    security_group_id = "${aws_security_group.vault_elb.id}"
+    type = "egress"
+    from_port = 8500
+    to_port = 8500
+    protocol = "tcp"
+    source_security_group_id = "${aws_security_group.vault.id}"
+}
