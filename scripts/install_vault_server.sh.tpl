@@ -2,8 +2,7 @@
 set -e
 
 # Install packages
-sudo apt-get update -y
-sudo apt-get install -y curl unzip
+${install_unzip}
 
 # Download Vault into some temporary directory
 curl -L "${vault_download_url}" > /tmp/vault.zip
