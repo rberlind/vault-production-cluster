@@ -1,19 +1,14 @@
 # Deploy Vault to AWS with Consul Storage Backend
 
-This folder contains a Terraform module for deploying Vault to AWS (within a VPC) along with Consul as the storage backend. It can be used as-is or can be modified to work in your scenario, but should serve as a strong starting point for deploying Vault. It can be used with Ubuntu 16.04 or RHEL 7.5.
+This folder contains a Terraform module for deploying Vault to AWS along with Consul as the storage backend. It can be used as-is or can be modified to work in your scenario, but should serve as a starting point for deploying Vault. It can be used with Ubuntu 16.04 or RHEL 7.5.
+
+This branch assumes that you already have a VPC with at least one subnet (public or private), an IAM instance profile associated with an IAM role having required policy, and properly configured security groups. To provision the IAM constructs and security groups, see the create-iam-and-sgs branch of this repository.
 
 The Terraform code will create the following resources in a VPC and subnet that you specify in the AWS us-east-1 region:
 * An AWS auto scaling group with 3 EC2 instances running Vault on RHEL 7.5 or Ubuntu 16.04 (depending on the AMI passed to the ami variable)
 * An AWS auto scaling group with 3 EC2 instances running Consul on RHEL 7.5 or Ubuntu 16.04 (depending on the AMI passed to the ami variable)
 * 2 AWS launch configurations
 * 2 AWS Elastic Load Balancers, one for Vault and one for Consul
-* 2 AWS security groups, one for the Vault and Consul EC2 instances and one for the ELBs.
-* Security Group Rules to control ingress and egress for the instances and the ELBs. These attempt to limit most traffic to inside and between the two security groups, but do allow the following broader access:
-** inbound SSH access on port 22 from anywhere
-** inbound access to the ELBs on ports 8200 for Vault and 8500 for Consul
-** outbound calls on port 443 to anywhere (so that the installation scripts can download the vault and consul binaries)
-
-After installation, those broader security group rules could be made tighter.
 
 You can deploy this in either a public or a private subnet.  But you must set elb_internal and public_ip as instructed below in both cases. The VPC should have at least one subnet with 2 or 3 being preferred for high availability.
 
@@ -32,7 +27,15 @@ export AWS_SESSION_TOKEN=<your_token>
 
 Be sure to set unzip_command to the appropriate command for Ubuntu or RHEL, depending on your AMI.
 
+Set instance_profile_name to the name of your IAM instance profile which will be the same as the name of an IAM role if you created that role in the AWS Console.
+
+Set vault_sg_id to the ID of the security group you are providing for use by the Vault and Consul EC2 instances.
+
+Set elb_sg_id to the ID of the security group you are providing for use by the Vault and Consul Elastic Load Balancers.
+
 Set ami to the ID of a Ubuntu 16.04 or RHEL 7.5 AMI. Public Ubuntu AMIs include ami-759bc50a or ami-059eeca93cf09eebd.  A public RHEL 7.5 AMI is ami-6871a115.
+
+Set instance_type to the size you want to use for the EC2 instances.
 
 key_name should be the name of an existing AWS keypair in your AWS account in the us-east-1 region. Use the name as it is shown in the AWS Console, not the name of the private key on your computer.  Of course, you'll need that private key file in order to ssh to the Vault instance that is created for you.
 
@@ -68,8 +71,6 @@ You should get outputs at the end of the apply showing something like the follow
 Outputs:
 consul_address = benchmark-consul-elb-387787750.us-east-1.elb.amazonaws.com
 vault_address = benchmark-vault-elb-783003639.us-east-1.elb.amazonaws.com
-vault_elb_security_group = sg-09ee1199992b803f7
-vault_security_group = sg-0a4c0e2f499e2e0cf
 ```
 
 You will be able to use the Vault ELB URL after Vault is initialized which you will do as follows:
