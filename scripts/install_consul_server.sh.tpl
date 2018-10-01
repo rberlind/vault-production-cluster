@@ -21,6 +21,7 @@ EOF
 IP_ADDRESS=$(curl http://instance-data/latest/meta-data/local-ipv4)
 sed -i "s/IP_ADDRESS/$IP_ADDRESS/g" /tmp/consul-config
 sed -i "s/TAG_VALUE/${tag_value}/g" /tmp/consul-config
+sed -i "s/CONSUL_NODES/${consul_nodes}/g" /tmp/consul-config
 sudo mkdir /etc/consul.d
 sudo mv /tmp/consul-config /etc/consul.d/consul-config.json
 
