@@ -197,9 +197,3 @@ resource "aws_elb" "consul" {
         interval = 15
     }
 }
-
-resource "aws_security_group" "vault_elb" {
-    name = "${var.vault_name_prefix}-elb"
-    description = "Vault ELB"
-    vpc_id = "${var.vpc_id}"
-}
