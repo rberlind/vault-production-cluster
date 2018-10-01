@@ -3,13 +3,13 @@
 unzip_command = "sudo yum -y install unzip"
 
 # EC2 Instance Profile Name
-instance_profile_name = ""
+instance_profile_name = "benchmark-vault20181001135800895900000002"
 
 # Vault Security Group ID
-vault_sg_id = ""
+vault_sg_id = "sg-0de4f38fb2d0a0643"
 
 # ELB Security Group ID
-elb_sg_id = ""
+elb_sg_id = "sg-0634aae1fd7f0e9fc"
 
 # Ubuntu would be ami-759bc50a or ami-059eeca93cf09eebd
 ami = "ami-6871a115" # RHEL 7.5
