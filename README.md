@@ -2,7 +2,7 @@
 
 This folder contains a Terraform module for deploying Vault to AWS along with Consul as the storage backend. It can be used as-is or can be modified to work in your scenario, but should serve as a starting point for deploying Vault. It can be used with Ubuntu 16.04 or RHEL 7.5.
 
-This branch assumes that you already have a VPC with at least one subnet (public or private), an IAM instance profile associated with an IAM role having required policy, and properly configured security groups. To provision the IAM constructs and security groups, see the create-iam-and-sgs branch of this repository.
+This branch assumes that you already have a VPC with at least one subnet (public or private), an IAM instance profile associated with an IAM role having required policy, and properly configured security groups. To provision the IAM constructs and security groups, see the create-iam-and-sgs branch of this repository. If you are allowed to provision IAM resources, security groups, auto scaling groups, EC2 instances, and Elastic Load Balancers, then you could use the master branch of this repository to provision everything you need (other than the VPC) in a single Terraform configuration.
 
 The Terraform code will create the following resources in a VPC and subnet that you specify in the AWS us-east-1 region:
 * An AWS auto scaling group with 3 EC2 instances running Vault on RHEL 7.5 or Ubuntu 16.04 (depending on the AMI passed to the ami variable)
