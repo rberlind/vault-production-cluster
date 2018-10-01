@@ -8,6 +8,18 @@ variable "unzip_command" {
     default = "sudo apt-get install -y curl unzip"
 }
 
+variable "instance_profile_name" {
+   description = "name of the EC2 instance profile to use"
+}
+
+variable "vault_sg_id" {
+  description = "ID of the Vault security group"
+}
+
+variable "elb_sg_id" {
+  description = "ID of the ELB security group"
+}
+
 variable "vault_download_url" {
     default = "https://s3-us-west-2.amazonaws.com/hc-enterprise-binaries/vault/ent/0.11.1/vault-enterprise_0.11.1%2Bent_linux_amd64.zip"
     description = "URL to download Vault"

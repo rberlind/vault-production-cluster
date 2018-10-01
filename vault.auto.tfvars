@@ -2,6 +2,15 @@
 #For RHEL, set unzip_command to "sudo yum -y install unzip"
 unzip_command = "sudo yum -y install unzip"
 
+# EC2 Instance Profile Name
+instance_profile_name = ""
+
+# Vault Security Group ID
+vault_sg_id = ""
+
+# ELB Security Group ID
+elb_sg_id = ""
+
 # Ubuntu would be ami-759bc50a or ami-059eeca93cf09eebd
 ami = "ami-6871a115" # RHEL 7.5
 instance_type = "m5.large"
