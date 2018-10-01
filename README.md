@@ -3,6 +3,7 @@
 This folder contains a Terraform module for deploying Vault to AWS (within a VPC) along with Consul as the storage backend. It can be used as-is or can be modified to work in your scenario, but should serve as a strong starting point for deploying Vault. It can be used with Ubuntu 16.04 or RHEL 7.5.
 
 The Terraform code will create the following resources in a VPC and subnet that you specify in the AWS us-east-1 region:
+* IAM instance profile, IAM role, IAM policy, and associated IAM policy documents
 * An AWS auto scaling group with 3 EC2 instances running Vault on RHEL 7.5 or Ubuntu 16.04 (depending on the AMI passed to the ami variable)
 * An AWS auto scaling group with 3 EC2 instances running Consul on RHEL 7.5 or Ubuntu 16.04 (depending on the AMI passed to the ami variable)
 * 2 AWS launch configurations
@@ -12,10 +13,11 @@ The Terraform code will create the following resources in a VPC and subnet that 
 ** inbound SSH access on port 22 from anywhere
 ** inbound access to the ELBs on ports 8200 for Vault and 8500 for Consul
 ** outbound calls on port 443 to anywhere (so that the installation scripts can download the vault and consul binaries)
-
 After installation, those broader security group rules could be made tighter.
 
 You can deploy this in either a public or a private subnet.  But you must set elb_internal and public_ip as instructed below in both cases. The VPC should have at least one subnet with 2 or 3 being preferred for high availability.
+
+Note that the create-iam-and-sgs branch of this repository can be used to create the IAM and security group resources separately. If you do use that, you can then use the asgs-instances-elbs branch to create the auto scaling groups, EC2 instances, and ELBs.
 
 ## Preparation
 1. Download [terraform](https://www.terraform.io/downloads.html) and extract the terraform binary to some directory in your path.
@@ -33,6 +35,8 @@ export AWS_SESSION_TOKEN=<your_token>
 Be sure to set unzip_command to the appropriate command for Ubuntu or RHEL, depending on your AMI.
 
 Set ami to the ID of a Ubuntu 16.04 or RHEL 7.5 AMI. Public Ubuntu AMIs include ami-759bc50a or ami-059eeca93cf09eebd.  A public RHEL 7.5 AMI is ami-6871a115.
+
+Set instance_type to the size you want to use for the EC2 instances.
 
 key_name should be the name of an existing AWS keypair in your AWS account in the us-east-1 region. Use the name as it is shown in the AWS Console, not the name of the private key on your computer.  Of course, you'll need that private key file in order to ssh to the Vault instance that is created for you.
 
