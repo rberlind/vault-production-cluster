@@ -183,10 +183,6 @@ data "aws_iam_policy_document" "auto_discover_cluster" {
 
     actions = [
       "ec2:DescribeInstances",
-      "ec2messages:GetMessages",
-      "ssm:UpdateInstanceInformation",
-      "ssm:ListInstanceAssociations",
-      "ssm:ListAssociations",
     ]
 
     resources = ["*"]
