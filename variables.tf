@@ -9,13 +9,13 @@ variable "unzip_command" {
 }
 
 variable "vault_download_url" {
-    default = "https://s3-us-west-2.amazonaws.com/hc-enterprise-binaries/vault/ent/0.11.1/vault-enterprise_0.11.1%2Bent_linux_amd64.zip"
+    default = "https://s3-us-west-2.amazonaws.com/hc-enterprise-binaries/vault/ent/1.0.2/vault-enterprise_1.0.2%2Bent_linux_amd64.zip"
     description = "URL to download Vault"
 
 }
 
 variable "consul_download_url" {
-    default = "https://s3-us-west-2.amazonaws.com/hc-enterprise-binaries/consul/ent/1.2.3/consul-enterprise_1.2.3%2Bent_linux_amd64.zip"
+    default = "https://s3-us-west-2.amazonaws.com/hc-enterprise-binaries/consul/ent/1.4.2/consul-enterprise_1.4.2%2Bent_linux_amd64.zip"
     description = "URL to download Consul"
 }
 
