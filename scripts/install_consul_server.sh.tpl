@@ -35,7 +35,6 @@ After=network-online.target
 [Service]
 Restart=on-failure
 EnvironmentFile=/etc/consul.d/consul-config.json
-Environment=CONSUL_UI_BETA=true
 ExecStart=/usr/local/bin/consul agent -config-dir /etc/consul.d $FLAGS
 ExecReload=/bin/kill -HUP $MAINPID
 KillSignal=SIGTERM
