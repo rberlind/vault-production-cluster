@@ -30,7 +30,7 @@ export AWS_SECRET_ACCESS_KEY=<your_aws_secret_key>
 export AWS_DEFAULT_REGION=us-east-1
 export AWS_SESSION_TOKEN=<your_token>
 ```
-1. Edit the file vault.auto.tfvars and provide values for the variables at the top of the file that do not yet have values.
+4. Edit the file vault.auto.tfvars and provide values for the variables at the top of the file that do not yet have values.
 
 Be sure to set unzip_command to the appropriate command for Ubuntu or RHEL, depending on your AMI.
 
