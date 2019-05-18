@@ -12,6 +12,10 @@ The Terraform code will create the following resources in a VPC and subnet that 
 
 You can deploy this in either a public or a private subnet.  But you must set elb_internal and public_ip as instructed below in both cases. The VPC should have at least one subnet with 2 or 3 being preferred for high availability.
 
+Note that if using the HTTP download links for the evaulation binaries of Vault Enterprise and Consul Enterprise, you will need to apply license files for both of these. See more below. Note, however, that you could use Consul Open Source instead of Consul Enterprise with no loss of functionality. In that case, you would change the consul_download_url to https://releases.hashicorp.com/consul/1.5.0/consul_1.5.0_linux_amd64.zip.
+
+The licenses must be applied within 30 minutes after starting the servers. If you don't do this, you will need to restart them and then apply the licenses within 30 minutes.
+
 ## Preparation
 1. Download [terraform](https://www.terraform.io/downloads.html) and extract the terraform binary to some directory in your path.
 1. Clone this repository to some directory on your laptop
